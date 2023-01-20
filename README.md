@@ -251,7 +251,7 @@ docker run --rm -it --privileged --network host --name topology topology:latest
 ## Solution
 
 <!-- TODO: Add link to solution repository -->
-A solution for this tutorial is available [here](https://github.com/scc365/tutorial-solution-ryu) on GitHub. However, this tutorial is not assessed and is designed to help you get familiar with Ryu, so make sure you make your own attempt before looking at the solution.
+A solution for this tutorial will be available [here](https://github.com/scc365/tutorial-solution-ryu) on GitHub (in week 13). However, this tutorial is not assessed and is designed to help you get familiar with Ryu, so make sure you make your own attempt before looking at the solution.
 
 ## Links
  - Network Testing Guide: [SCC365 GitHub](https://github.com/scc365/guide-network-testing)
