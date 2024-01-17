@@ -15,12 +15,11 @@ function becho {
 if [ -f "$TOPOLOGY_FILE" ]; then
     (docker rm -f topology &> /dev/null) | true
     becho "🐳\t Starting Mininet Topology"
-    docker run --rm -it --privileged --network host \
-      --cap-add NET_ADMIN --cap-add SYS_ADMIN --cap-add NET_RAW \
-      --name topology --label scc365=topology \
-      -v "$(pwd)"/topology.py:/workspace/topology.py:ro \
-      ghcr.io/scc365/mininet:latest \
-      python3 topology.py
+    docker run --rm -it --privileged \
+        -v "$(pwd)"/topology.py:/workspace/topology.py:ro \
+        --label scc365=topology --name topology-mn \
+        ghcr.io/scc365/mininet:latest \
+        mn --custom topology.py --topo tutorialTopology
     becho "👋\tDone"
 else
     becho "🆘\Topology file not found"

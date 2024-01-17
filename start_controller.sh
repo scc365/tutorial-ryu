@@ -19,7 +19,7 @@ if [ -f "$CONTROLLER_FILE" ]; then
         -v "$(pwd)"/:/workspace/ \
         --label scc365=controller --name controller \
         ghcr.io/scc365/ryu:latest \
-        --ofp-tcp-listen-port 6633 --verbose controller.py
+        --ofp-tcp-listen-port 6633 controller.py
     becho "👋\tDone"
 else
     becho "🆘\tController file not found"

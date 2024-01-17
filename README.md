@@ -49,13 +49,10 @@ sudo mn --switch ovsk --controller remote --custom ./topology.py --topo tutorial
 <details>
 <summary>Do this with Docker 🐳</summary>
 <br>
-Build the container image (each time you make a change to the code):
-<pre>
-docker build --rm -f topology.Dockerfile -t topology:latest .
-</pre><br>
+
 Run the container:
 <pre>
-docker run --rm -it --privileged --network host --name topology topology:latest
+./start_topology
 </pre><br>
 </details>
 <br>
@@ -76,16 +73,11 @@ ryu-manager ./controller.py
 <details>
 <summary>Do this with Docker 🐳</summary>
 <br>
-Build the container image (each time you make a change to the code):
-<pre>
-docker build --rm -f controller.Dockerfile -t controller:latest .
-</pre><br>
 Run the container:
 <pre>
-docker run --rm -it --network host --name controller controller:latest
+./start_controller
 </pre><br>
 </details>
-<br>
 
 <details>
 <summary>Printing debug messages from the controller 🐛</summary>
@@ -97,9 +89,9 @@ To force <code>ryu-manager</code> to show this debug output, you can add the <co
 ryu-manager --verbose ./controller.py
 </pre>
 <br>
-Or if you're using Docker, you can add the flag to the <code>Dockerfile</code> like so:
+Or if you're using Docker, modify line <code>22</code> of the start script to add the <code>--verbose</code> flag:
 <pre>
-CMD [ "--verbose", "./controller.py" ]
+--ofp-tcp-listen-port 6633 --verbose controller.py
 </pre>
 </details>
 <br>
@@ -233,25 +225,17 @@ Where the only change is the `--topo` flag in the `mn` command.
 <details>
 <summary>Do this with Docker 🐳</summary>
 <br>
-Change the <code>CMD</code> line in the topology <code>Dockerfile</code> to add the updated <code>--topo</code> flag:
+Change line <code>22</code> in the <code>start_topology.sh</code> to the following:
 <pre>
-CMD [ "--switch ovsk --controller remote --custom /topology/topology.py --topo tutorialTopologyAdvanced" ]
-</pre><br>
-Build the container image (each time you make a change to the code):
-<pre>
-docker build --rm -f topology.Dockerfile -t topology:latest .
-</pre><br>
-Run the container:
-<pre>
-docker run --rm -it --privileged --network host --name topology topology:latest
-</pre><br>
+  mn --custom topology.py --topo tutorialTopologyAdvanced
+</pre>
 </details>
 <br>
 
 ## Solution
 
 <!-- TODO: Add link to solution repository -->
-A solution for this tutorial will be available [here](https://github.com/scc365/tutorial-solution-ryu) on GitHub (in week 13). However, this tutorial is not assessed and is designed to help you get familiar with Ryu, so make sure you make your own attempt before looking at the solution.
+A solution for this tutorial will be available [here](https://github.com/scc365/tutorial-solution-ryu) on GitHub. However, this tutorial is not assessed and is designed to help you get familiar with Ryu, so make sure you make your own attempt before looking at the solution.
 
 ## Links
  - Network Testing Guide: [SCC365 GitHub](https://github.com/scc365/guide-network-testing)
