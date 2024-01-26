@@ -16,7 +16,7 @@ if [ -f "$TOPOLOGY_FILE" ]; then
     becho "🐳\t Starting Mininet Topology"
     docker run --rm -it --privileged \
         -v "$(pwd)"/topology.py:/workspace/topology.py:ro \
-        --label scc365=topology --name topology-mn \
+        --label scc365=topology --name topology-mn --network host \
         ghcr.io/scc365/mininet:latest \
         mn --custom topology.py --topo tutorialTopology
     becho "👋\tDone"
