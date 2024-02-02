@@ -18,7 +18,7 @@ if [ -f "$TOPOLOGY_FILE" ]; then
         -v "$(pwd)"/topology.py:/workspace/topology.py:ro \
         --label scc365=topology --name topology-mn --network host \
         ghcr.io/scc365/mininet:latest \
-        mn --custom topology.py --topo tutorialTopology
+        mn --switch ovsk --controller remote --custom topology.py --topo tutorialTopologyAdvanced
     becho "👋\tDone"
 else
     becho "🆘\Topology file not found"
