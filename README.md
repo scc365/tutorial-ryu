@@ -1,15 +1,33 @@
-# Tutorial: OpenFlow with Ryu
+# Tutorial: OpenFlow with OSKen
 
-This tutorial looks at creating a simple OpenFlow controller using the Python-based controller framework: Ryu. Specifically, this tutorial covers the creation a layer 2 learning switch controller. Mininet will be used in this tutorial, so if you are not yet familiar with Mininet, please complete the tutorial found [here](https://github.com/scc365/tutorial-mininet).
+This tutorial looks at creating a simple OpenFlow controller using the
+Python-based controller framework: OSKen. Specifically, this tutorial covers the
+creation a layer 2 learning switch controller. Mininet will be used in this
+tutorial, so if you are not yet familiar with Mininet, please complete the
+tutorial found [here](https://github.com/scc365/tutorial-mininet).
 
 > ⏰ **Estimated Completion Time**: 1-2 Hours
 
 ### Background
-OpenFlow is a protocol that defines how the data planes of SDN-enabled network devices communicate with their control planes. To first start using OpenFlow, it is important to understand that is not an implementation or a library, but a _protocol definition_. The means there is no process in a language where you can just import OpenFlow, instead when using OpenFlow you need to either implement the protocol from scratch yourself, or import a library that implements the OpenFlow protocol already. There are many of these, but in this module you will be using Ryu, a Python-based library that implements the protocol.
+OpenFlow is a protocol that defines how the data planes of SDN-enabled network
+devices communicate with their control planes. To first start using OpenFlow, it
+is important to understand that is not an implementation or a library, but a
+_protocol definition_. The means there is no process in a language where you can
+just import OpenFlow, instead when using OpenFlow you need to either implement
+the protocol from scratch yourself, or import a library that implements the
+OpenFlow protocol already. There are many of these, but in this module you will
+be using OSKen, a Python-based library that implements the protocol. OSKen  is
+fork of  another Python called Ryu and it is maintained by OpenStack, a popular
+open-source Cloud
+management framework. The two projects share the same APIs, but OSKen
+maintains compatibility with the latest Python packaged, while the Ryu
+development has frozen for a while. We will use pointers to the Ryu
+documentation and the two controllers can be used interexchangeably. 
 
 ## Getting Started
 
-To complete this tutorial you should clone this repository onto the provided [virtual machine](https://github.com/scc365/virtual-machine):
+To complete this tutorial you should clone this repository in the h-drive of
+your lab machine:
 
 ```
 git clone https://github.com/scc365/tutorial-ryu
@@ -43,10 +61,10 @@ This template provides you with an OpenFlow controller (`./controller.py`) that 
 But first, you should get the provided topology up and running. This topology has only a single switch that connects to 4 hosts with varying link constraints. The difference in this topology to the Mininet tutorial topology example is that the controller connects to a _remote controller_ rather than using the default controller provided by Mininet. When the switch starts, it looks for a controller at the given IP:port, and as you will be testing locally, these have been set to `127.0.0.1:6633`. You can run this in Mininet via the `mn` command line tool like so:
 
 ```bash
-sudo mn --switch ovsk --controller remote --custom ./topology.py --topo tutorialTopology
+mn --switch ovsk --controller remote --custom ./topology.py --topo tutorialTopology
 ```
 
-<details>
+<!-- <details>
 <summary>Do this with Docker 🐳</summary>
 <br>
 
@@ -55,7 +73,7 @@ Run the container:
 ./start_topology
 </pre><br>
 </details>
-<br>
+<br> -->
 
 The added flag `--controller remote` here is what is telling Mininet to add a remote controller to the topology.
 
@@ -67,26 +85,26 @@ The added flag `--controller remote` here is what is telling Mininet to add a re
 Now your topology is running, you might notice that there is no connectivity. This is because the switch is looking for a remote controller that isn't there! Now you should create an instance of the Hub controller provided like so:
 
 ```bash
-ryu-manager ./controller.py
+osken-manager ./controller.py
 ```
 
-<details>
+<!-- <details>
 <summary>Do this with Docker 🐳</summary>
 <br>
 Run the container:
 <pre>
 ./start_controller
 </pre><br>
-</details>
+</details> -->
 
 <details>
 <summary>Printing debug messages from the controller 🐛</summary>
 <br>
 The controller has a logger (<code>self.logger</code>) that prints messages to the terminal. Normal <code>self.logger.info("...")</code> messages are printed by default, however, you can use the logger to print debug information too! In the code this looks like: <code>self.logger.debug("...")</code>
 <br><br>
-To force <code>ryu-manager</code> to show this debug output, you can add the <code>--verbose</code> flag to the command like so:
+To force <code>osken-manager</code> to show this debug output, you can add the <code>--verbose</code> flag to the command like so:
 <pre>
-ryu-manager --verbose ./controller.py
+osken-manager --verbose ./controller.py
 </pre>
 <br>
 Or if you're using Docker, modify line <code>22</code> of the start script to add the <code>--verbose</code> flag:
@@ -114,7 +132,7 @@ In some environments, this type of device can be useful primarily due its simpli
 
 The controller template provided here allows a connected OpenFlow-enabled device to act as an Ethernet Hub. But it is important to understand how this controller is programmed to be able to build your own.
 
-- The Python class `Controller` extends the Ryu provided class `RyuApp`, so some functionality is handled automatically. For example, when a datapath establishes a connection with the controller, the controller sends a [`Features Request`](https://ryu.readthedocs.io/en/latest/ofproto_v1_3_ref.html#ryu.ofproto.ofproto_v1_3_parser.OFPFeaturesRequest).
+- The Python class `Controller` extends the Ryu provided class `OSKenApp`, so some functionality is handled automatically. For example, when a datapath establishes a connection with the controller, the controller sends a [`Features Request`](https://ryu.readthedocs.io/en/latest/ofproto_v1_3_ref.html#ryu.ofproto.ofproto_v1_3_parser.OFPFeaturesRequest).
 - The function `features_handler` is set to be the response handler for the automatically sent Features Request. This is done via the Python function decorator ` @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)`. The function itself does have a use in this Hub controller. It installs a flow table modification with the lowest priority that just sends the packet to the controller, so this flow table entry acts as a flow table miss rule.
 - The function `packet_in_handler` is set to be the handler for [`Packet In` events](https://ryu.readthedocs.io/en/latest/ofproto_v1_3_ref.html#ryu.ofproto.ofproto_v1_3_parser.OFPPacketIn). When a packet comes into the controller (as is set to be the default defined in the `features_handler` function), this function handles the event. In this implementation it takes the event, extracts the datapath information, creates an output action that is to output the packet on all ports (flood), and sends this packet out using the action. Perhaps the most important take-away is the following line that specifies the flood action:
   ```Python
@@ -152,14 +170,14 @@ As the controller had added an entry to the data strcutrue for the MAC address <
 </details>
 <br>
 
-### Learning Switch with Ryu
+### Implement a Switch with Ryu
 
 > 🧑‍🏫 LU Students: A portion of this section will be covered in a walk-through in the lab session!
 
 So, as you have access to the hub controller and have it running with the provided topology, you should use this as a base to create your own Layer 2 learning switch.
 
 - For the in-memory data structure, you can use a dictionary (basically `JSON`) to store the MAC address to port mappings.
-- You will need to import more of the Ryu package to access the fields in a packet's ethernet header:
+- You will need to import more of the Ryu packages to access the fields in a packet's ethernet header:
   - `from ryu.lib.packet import ethernet`
   - Then a packet's ethernet header can be extracted from the data provided with the Packet In OpenFlow event message: `eth_header = packet.Packet(ev.msg.data).get_protocol(ethernet.ethernet)`
   - Specific fields can then be extracted, for example the destination MAC address: `eth_header.dst`
@@ -217,12 +235,12 @@ The topology provided contains 2 topologies:
 You can switch to the other topology like so:
 
 ```bash
-sudo mn --switch ovsk --controller remote --custom ./topology.py --topo tutorialTopologyAdvanced
+mn --switch ovsk --controller remote --custom ./topology.py --topo tutorialTopologyAdvanced
 ```
 
 Where the only change is the `--topo` flag in the `mn` command.
 
-<details>
+<!-- <details>
 <summary>Do this with Docker 🐳</summary>
 <br>
 Change line <code>22</code> in the <code>start_topology.sh</code> to the following:
@@ -230,7 +248,7 @@ Change line <code>22</code> in the <code>start_topology.sh</code> to the followi
   mn --custom topology.py --topo tutorialTopologyAdvanced
 </pre>
 </details>
-<br>
+<br> -->
 
 ## Solution
 
