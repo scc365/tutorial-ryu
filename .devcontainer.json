@@ -1,45 +1,4 @@
 {
-  "name": "scc365",
-  "image": "ghcr.io/scc365/devcontainer:latest",
-  "workspaceMount": "source=${localWorkspaceFolder}/,target=/workspace,type=bind,consistency=cached",
-  "workspaceFolder": "/workspace",
-  "postCreateCommand": "sh -c /scripts/entrypoint.sh",
-  "privileged": true,
-  "containerEnv": {
-    "DISPLAY": "${localEnv:DISPLAY}",
-  },
-  "mounts": [
-    // "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
-  ],
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        // General Extensions
-        "naumovs.color-highlight",
-        "spikespaz.vscode-smoothtype",
-        "alefragnani.Bookmarks",
-        "oderwat.indent-rainbow",
-        "yzhang.markdown-all-in-one",
-        "eamodio.gitlens",
-        "mhutchie.git-graph",
-        "gruntfuggly.todo-tree",
-        "mohsen1.prettify-json",
-        "stkb.rewrap",
-        "shardulm94.trailing-spaces",
-        // Python Extensions
-        "ms-python.python",
-        "ms-python.isort",
-        "ms-python.autopep8"
-      ],
-      "settings": {
-        // General Settings
-        "files.eol": "\n",
-        "files.autoSave": "onFocusChange",
-        "editor.formatOnSave": true,
-        "rewrap.wrappingColumn": 80,
-        // Python Settings
-        "python.pythonPath": "/usr/bin/python3"
-      }
-    }
-  }
+  "name": "scc_365/ken",
+  "image": "scc-registry.lancs.ac.uk/teaching/scc_365/ken:24"
 }
