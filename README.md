@@ -30,8 +30,8 @@ To complete this tutorial you should clone this repository in the h-drive of
 your lab machine:
 
 ```
-git clone https://github.com/scc365/tutorial-ryu
-cd ./tutorial-ryu
+git clone https://github.com/scc365/tutorial-ken
+cd ./tutorial-ken
 ```
 
 Alternatively you can use this as a _Template Repository_ if you wish to have a copy in your own GitHub profile.
@@ -61,7 +61,7 @@ This template provides you with an OpenFlow controller (`./controller.py`) that 
 But first, you should get the provided topology up and running. This topology has only a single switch that connects to 4 hosts with varying link constraints. The difference in this topology to the Mininet tutorial topology example is that the controller connects to a _remote controller_ rather than using the default controller provided by Mininet. When the switch starts, it looks for a controller at the given IP:port, and as you will be testing locally, these have been set to `127.0.0.1:6633`. You can run this in Mininet via the `mn` command line tool like so:
 
 ```bash
-mn --switch ovsk --controller remote --custom ./topology.py --topo tutorialTopology
+mn --switch ovs --controller remote --custom ./topology.py --topo tutorialTopology
 ```
 
 <!-- <details>
@@ -78,7 +78,7 @@ Run the container:
 The added flag `--controller remote` here is what is telling Mininet to add a remote controller to the topology.
 
 <!-- TODO: Add the topology to the ME repository -->
-> 👀 You can see the topology in [`ME`](https://scc365.github.io/me) by importing the example "`Ryu Tutorial`"
+> 👀 You can see the topology in [`ME`](https://scc365.github.io/me) by importing the example "`Ken Tutorial`"
 
 ### Controller
 
@@ -235,7 +235,7 @@ The topology provided contains 2 topologies:
 You can switch to the other topology like so:
 
 ```bash
-mn --switch ovsk --controller remote --custom ./topology.py --topo tutorialTopologyAdvanced
+mn --switch ovs --controller remote --custom ./topology.py --topo tutorialTopologyAdvanced
 ```
 
 Where the only change is the `--topo` flag in the `mn` command.
