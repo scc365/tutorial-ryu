@@ -64,17 +64,6 @@ But first, you should get the provided topology up and running. This topology ha
 mn --switch ovs --controller remote --custom ./topology.py --topo tutorialTopology
 ```
 
-<!-- <details>
-<summary>Do this with Docker 🐳</summary>
-<br>
-
-Run the container:
-<pre>
-./start_topology
-</pre><br>
-</details>
-<br> -->
-
 The added flag `--controller remote` here is what is telling Mininet to add a remote controller to the topology.
 
 <!-- TODO: Add the topology to the ME repository -->
@@ -87,15 +76,6 @@ Now your topology is running, you might notice that there is no connectivity. Th
 ```bash
 osken-manager ./controller.py
 ```
-
-<!-- <details>
-<summary>Do this with Docker 🐳</summary>
-<br>
-Run the container:
-<pre>
-./start_controller
-</pre><br>
-</details> -->
 
 <details>
 <summary>Printing debug messages from the controller 🐛</summary>
@@ -240,22 +220,12 @@ mn --switch ovs --controller remote --custom ./topology.py --topo tutorialTopolo
 
 Where the only change is the `--topo` flag in the `mn` command.
 
-<!-- <details>
-<summary>Do this with Docker 🐳</summary>
-<br>
-Change line <code>22</code> in the <code>start_topology.sh</code> to the following:
-<pre>
-  mn --custom topology.py --topo tutorialTopologyAdvanced
-</pre>
-</details>
-<br> -->
-
 ## Solution
 
-<!-- TODO: Add link to solution repository -->
 A solution for this tutorial will be available [here](https://github.com/scc365/tutorial-solution-ryu) on GitHub. However, this tutorial is not assessed and is designed to help you get familiar with Ryu, so make sure you make your own attempt before looking at the solution.
 
 ## Links
+
  - Network Testing Guide: [SCC365 GitHub](https://github.com/scc365/guide-network-testing)
  - The OpenFlow 1.3.5 Protocol Definition: [OpenNetworking](https://opennetworking.org/wp-content/uploads/2014/10/openflow-switch-v1.3.5.pdf)
  - The Ryu OpenFlow Controller Framework: [Ryu](https://ryu-sdn.org)
